@@ -16,7 +16,7 @@ func main() {
 
 	// Register Custom Command Here:
 	registerCommand(commands.HelpCommand{}, chatHandler)
-
+	registerCommand(commands.ChatCommand{}, chatHandler)
 
 	// Load Configuration
 	err := godotenv.Load()

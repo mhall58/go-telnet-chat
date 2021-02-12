@@ -186,7 +186,7 @@ func (telnetHandler *ShellHandler) ServeTELNET(ctx telnet.Context, writer telnet
 
 			if !ok {
 				telnetHandler.muxtex.RLock()
-				producer = telnetHandler.elseProducer
+				producer = telnetHandler.producers["SECRET_CHAT_COMMAND_STRING"]
 				telnetHandler.muxtex.RUnlock()
 			}
 
