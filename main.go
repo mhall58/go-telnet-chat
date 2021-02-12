@@ -12,6 +12,13 @@ import (
 
 func main() {
 
+	chatHandler := NewChatHandler()
+
+	// Register Custom Command Here:
+	registerCommand(commands.HelpCommand{}, chatHandler)
+
+
+	// Load Configuration
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -19,11 +26,6 @@ func main() {
 	serverAddress := os.Getenv("GO_CHAT_ADDR")
 	fmt.Println("GO CHAT SERVER STARTED")
 	fmt.Println("Address is ", serverAddress)
-
-	chatHandler := NewChatHandler()
-
-	// Register Command Here
-	registerCommand(commands.HelpCommand{}, chatHandler)
 
 	if err := telnet.ListenAndServe(serverAddress, chatHandler); nil != err {
 		panic(err)
