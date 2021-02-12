@@ -11,7 +11,7 @@ func main() {
 	shellHandler := telsh.NewShellHandler()
 	shellHandler.WelcomeMessage = "Welcome to GoChat! type '/help' for a list of commands."
 
-	registerCommand(commands.HelpCommand{}, *shellHandler)
+	registerCommand(commands.HelpCommand{}, shellHandler)
 
 	addr := ":5555"
 	if err := telnet.ListenAndServe(addr, shellHandler); nil != err {
@@ -19,6 +19,6 @@ func main() {
 	}
 }
 
-func registerCommand(command commands.Command, shellHandler telsh.ShellHandler) {
+func registerCommand(command commands.Command, shellHandler *telsh.ShellHandler) {
 	_ = shellHandler.Register("/help", telsh.ProducerFunc(command.RegisterHandler))
 }
