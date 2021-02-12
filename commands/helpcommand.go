@@ -9,6 +9,13 @@ import (
 
 type HelpCommand struct{}
 
+func (HelpCommand) GetShortcut() string {
+	return "/help"
+}
+
+func (HelpCommand) RegisterHandler(ctx telnet.Context, name string, args ...string) telsh.Handler {
+	return telsh.PromoteHandlerFunc(HelpCommand{}.runCommand)
+}
 func (HelpCommand) runCommand(stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error {
 	commands := []string{
 		"------------------------------------------------------------------\r\n",
@@ -31,8 +38,4 @@ func (HelpCommand) runCommand(stdin io.ReadCloser, stdout io.WriteCloser, stderr
 	}
 
 	return nil
-}
-
-func (HelpCommand) RegisterHandler(ctx telnet.Context, name string, args ...string) telsh.Handler {
-	return telsh.PromoteHandlerFunc(HelpCommand{}.runCommand)
 }

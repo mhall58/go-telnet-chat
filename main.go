@@ -4,26 +4,21 @@ import (
 	"github.com/reiver/go-telnet"
 	"github.com/reiver/go-telnet/telsh"
 	"go-telnet-chat/commands"
-	"io"
 )
-
-/** Interfaces **/
-
-type ChatCommand interface {
-	runCommand (stdin io.ReadCloser, stdout io.WriteCloser, stderr io.WriteCloser, args ...string) error
-	registerHandler(ctx telnet.Context, name string, args ...string) telsh.Handler
-}
 
 func main() {
 
 	shellHandler := telsh.NewShellHandler()
-	shellHandler.WelcomeMessage = "Welcome To Go Chat, type '/help' for a list of commands."
-	_ = shellHandler.Register("/help", telsh.ProducerFunc(commands.HelpCommand{}.RegisterHandler))
+	shellHandler.WelcomeMessage = "Welcome to GoChat! type '/help' for a list of commands."
 
-
+	registerCommand(commands.HelpCommand{}, *shellHandler)
 
 	addr := ":5555"
 	if err := telnet.ListenAndServe(addr, shellHandler); nil != err {
 		panic(err)
 	}
+}
+
+func registerCommand(command commands.Command, shellHandler telsh.ShellHandler) {
+	_ = shellHandler.Register("/help", telsh.ProducerFunc(command.RegisterHandler))
 }
