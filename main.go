@@ -16,23 +16,20 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-
-	shellHandler := telsh.NewShellHandler()
-	shellHandler.WelcomeMessage = "Welcome to GoChat! type '/help' for a list of commands."
-
-	registerCommand(commands.HelpCommand{}, shellHandler)
-
 	serverAddress := os.Getenv("GO_CHAT_ADDR")
-
 	fmt.Println("GO CHAT SERVER STARTED")
-	fmt.Println("Address is ", serverAddress )
+	fmt.Println("Address is ", serverAddress)
 
-	if err := telnet.ListenAndServe(serverAddress, shellHandler); nil != err {
+	chatHandler := NewChatHandler()
+
+	// Register Command Here
+	registerCommand(commands.HelpCommand{}, chatHandler)
+
+	if err := telnet.ListenAndServe(serverAddress, chatHandler); nil != err {
 		panic(err)
 	}
 }
 
-func registerCommand(command commands.Command, shellHandler *telsh.ShellHandler) {
-	_ = shellHandler.Register("/help", telsh.ProducerFunc(command.RegisterHandler))
+func registerCommand(command commands.Command, shellHandler *ShellHandler) {
+	_ = shellHandler.Register(command.GetShortcut(), telsh.ProducerFunc(command.RegisterHandler))
 }

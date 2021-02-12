@@ -27,14 +27,14 @@ func (HelpCommand) runCommand(stdin io.ReadCloser, stdout io.WriteCloser, stderr
 		"-  /part                - alias for leave\r\n",
 		"-  /handle <new name>   - change your chat handle\r\n",
 		"-  /help                - prints this menu\r\n",
-		"-  /giffy <keywords     - inserts a random gif based on keyword\r\n",
+		"-  /giffy <keywords>    - inserts a random gif based on keyword\r\n",
+		"-  /exit                - ends the session\r\n",
 		"------------------------------------------------------------------\r\n",
 		"\r\n",
 	}
 
 	for _, command := range commands {
 		oi.LongWriteString(stdout, command)
-
 	}
 
 	return nil
