@@ -1,37 +1,42 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/reiver/go-telnet"
-	"github.com/reiver/go-telnet/telsh"
-	"go-telnet-chat/commands"
-	"log"
-	"os"
+	"net"
+	"net/textproto"
 )
 
 func main() {
 
-	chatHandler := NewChatHandler()
+	s := Server{Addr: ":5555"}
 
-	// Register Custom Command Here:
-	registerCommand(commands.HelpCommand{}, chatHandler)
-	registerCommand(commands.ChatCommand{}, chatHandler)
+	l, _ := s.Start()
+	//defer l.Close()
 
-	// Load Configuration
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	for {
+		c, _ := l.Accept()
+
+		//session handler
+		go func(c net.Conn) {
+			bufReader := bufio.NewReader(c)
+			read := textproto.NewReader(bufReader)
+			bufWriter := bufio.NewWriter(c)
+			write := textproto.NewWriter(bufWriter)
+			write.PrintfLine("Welcome to Simple Go Chat\r\n")
+
+
+			for{
+				input, _ := read.ReadLine()
+				fmt.Println(input)
+				if input == "exit" {
+					break
+				}
+			}
+
+
+
+		}(c)
+
 	}
-	serverAddress := os.Getenv("GO_CHAT_ADDR")
-	fmt.Println("GO CHAT SERVER STARTED")
-	fmt.Println("Address is ", serverAddress)
-
-	if err := telnet.ListenAndServe(serverAddress, chatHandler); nil != err {
-		panic(err)
-	}
-}
-
-func registerCommand(command commands.Command, shellHandler *ShellHandler) {
-	_ = shellHandler.Register(command.GetShortcut(), telsh.ProducerFunc(command.RegisterHandler))
 }
