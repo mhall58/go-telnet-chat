@@ -6,6 +6,24 @@ type Server struct {
 	Addr string
 }
 
-func (s Server) Start() (net.Listener, error) {
-	return net.Listen("tcp", s.Addr)
+func (s Server) Start() {
+	listen, err := net.Listen("tcp", s.Addr)
+
+	if err != nil {
+		panic(err)
+	}
+
+	rooms := make(chan DataEvent)
+
+	// This for loop accepts new incoming connections and assigns them to a new goroutine
+	for {
+		connection, listenErr := listen.Accept()
+
+		if listenErr != nil {
+			panic(listenErr)
+		}
+		go SessionHandler{}.handleSession(connection, rooms)
+
+	}
+
 }

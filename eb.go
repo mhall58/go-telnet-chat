@@ -7,8 +7,10 @@ import (
 	"time"
 )
 
+// This EventBus was borrowed from https://levelup.gitconnected.com/lets-write-a-simple-event-bus-in-go-79b9480d8997
+
 type DataEvent struct {
-	Data string
+	Data  string
 	Topic string
 }
 
@@ -64,27 +66,3 @@ func publishTo(topic string, data string) {
 		time.Sleep(time.Duration(rand.Intn(1000)) * time.Millisecond)
 	}
 }
-
-//func main() {
-//	ch1 := make(chan DataEvent)
-//	ch2 := make(chan DataEvent)
-//	ch3 := make(chan DataEvent)
-//
-//	eb.Subscribe("topic1", ch1)
-//	eb.Subscribe("topic2", ch2)
-//	eb.Subscribe("topic2", ch3)
-//
-//	go publishTo("topic1", "Hi topic 1")
-//	go publishTo("topic2", "Welcome to topic 2")
-//
-//	for {
-//		select {
-//		case d := <-ch1:
-//			go printDataEvent("ch1", d)
-//		case d := <-ch2:
-//			go printDataEvent("ch2", d)
-//		case d := <-ch3:
-//			go printDataEvent("ch3", d)
-//		}
-//	}
-//}
