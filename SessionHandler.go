@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"net/textproto"
 	"regexp"
@@ -36,6 +37,8 @@ func (session SessionHandler) handleSession(connection net.Conn, rooms chan Data
 			connection.Close()
 			break
 		}
+
+		log.Println(fmt.Sprintf("#%s - %s - %s", currentRoom, handle, input))
 		eb.Publish(currentRoom, fmt.Sprintf("%s<<%s>> %s", session.getDate(), handle, input))
 	}
 

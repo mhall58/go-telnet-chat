@@ -1,12 +1,18 @@
 package main
 
-import "net"
+import (
+	"log"
+	"net"
+)
 
 type Server struct {
 	Addr string
 }
 
 func (s Server) Start() {
+
+	log.Println("starting server")
+
 	listen, err := net.Listen("tcp", s.Addr)
 
 	if err != nil {

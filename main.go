@@ -13,7 +13,12 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	logDirectory := os.Getenv("GO_CHAT_LOG_FILE")
+	file, err := os.OpenFile(os.Getenv("GO_CHAT_LOG_FILE"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.SetOutput(file)
 
 	s := Server{Addr: os.Getenv("GO_CHAT_ADDR")}
 	s.Start()
